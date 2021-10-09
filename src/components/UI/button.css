@@ -1,0 +1,26 @@
+.react_btn {
+  padding: 12px 15px;
+  outline: 0;
+  background-color: #ffffff;
+  color: #2a2a2a;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  font-weight: 600;
+  border: #2a2a2a solid 2px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react_btn:hover {
+  background-color: #2a2a2a;
+  color: white;
+}
+
+.success {
+  background-color: #085a0f !important;
+  color: #ffffff !important;
+}

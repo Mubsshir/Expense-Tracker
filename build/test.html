@@ -1,0 +1,127 @@
+{# Set layout style #}
+{% if module.layout_style == 'card' %}
+  {% set list_type = 'card' %}
+{% elif module.layout_style == 'list' %}
+  {% set list_type = 'list' %}
+{% endif %}
+
+{# Tag listing heading #}
+{% if tag %}
+  <h2>Posts about {{ page_meta.html_title|split(' | ')|last }}:</h2>
+{% endif %}
+{# End tag listing heading #}
+
+{# Blog author heading #}
+{% if blog_author %}
+  <h2>Posts by {{ blog_author.display_name }}:</h2>
+{% endif %}
+{# End blog author heading #}
+
+<section class="blog-index">
+  {% for content in contents %}
+
+    {# Blog listing article #}
+    <article class="blog-index__post blog-index__post--{{ list_type }}">
+
+      {# Article header #}
+      <header class="blog-index__post-header">
+        
+        {# Featured image #}
+        {# This checks to see if a user is opted into the blog listing editing experience. If they are it uses the conditional from the module. If they are not it uses the conditional from blog settings #}
+        {% if blog.listing_page_id %}
+          {% if content.featured_image and module.featured_image %}
+            <img class="blog-index__post-image" src="{{ content.featured_image }}" loading="lazy" alt="{{ content.name }}">
+          {% endif %}
+        {% else %}
+          {% if content.featured_image and group.use_featured_image_in_summary %}
+            <img class="blog-index__post-image" src="{{ content.featured_image }}" loading="lazy" alt="{{ content.name }}">
+          {% endif %}
+        {% endif %}
+        {# End featured image #}
+        {# Title #}
+        {% if module.post_title %}
+          <h2 class="blog-index__post-title"><a href="{{ content.absolute_url }}">{{ content.name }}</a></h2>
+        {% endif %}
+        {# End title #}
+
+
+        {# Author name and date #}
+        <div class="blog-index__post-meta">
+          
+          {% if module.publish_date %}
+            <time class="blog-index__post-date" datetime="{{ content.publish_date }}">{{ content.publish_date_localized }}</time>
+          {% endif %}
+        </div>
+        {# End author name and date #}
+
+      </header>
+      {# End article header #}
+
+      {# Article body #}
+      <div class="blog-index__post-body">
+
+
+        <div class="blog-index__post-content">
+
+        
+
+          {# Summary #}
+          {# This checks to see if a user is opted into the blog listing editing experience. If they are it uses the conditional from the module. If they are not it uses the conditional from blog settings #}
+          {% if blog.listing_page_id %}
+            {% if module.description %}
+              {% if content.post_body is string_containing "<!--more-->" %}
+                {{ content.post_list_content }}
+              {% else %}
+                {{ content.post_list_content|truncatehtml(170) }}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            {% if content_group.show_summary_in_listing %}
+              {% if content.post_body is string_containing "<!--more-->" %}
+                {{ content.post_list_content }}
+              {% else %}
+                {{ content.post_list_content|truncatehtml(170) }}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          {# End summary #}
+
+          
+          {# Read more button #}
+          {% if module.read_more %}
+            <a class="blog-index__post-button button" href="{{ content.absolute_url }}">{{ module.read_more_text }}</a>
+          {% endif %}
+          {# End read more button #}
+
+        </div>
+      </div>
+      {# End article body #}
+
+      {# Article footer #}
+      <footer class="blog-index__post-footer">
+
+        {# Tags #}
+        {% if module.tags and content.tag_list %}
+          <div class="blog-index__post-tags">
+            {% icon
+              name='tag',
+              purpose='decorative',
+              style='SOLID'
+            %}
+            {% for tag in content.tag_list %}
+              <a class="blog-index__post-tag-link" href="{{ blog_tag_url(group.id, tag.slug) }}">{{ tag.name }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {# End tags #}
+
+    
+
+      </footer>
+      {# End article footer #}
+
+    </article>
+    {# End blog listing article #}
+
+  {% endfor %}
+</section>
